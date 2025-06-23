@@ -1,0 +1,35 @@
+#%%
+  #1️⃣ Bean Configuration
+#In Spring XML, you define objects (beans) using:
+  <bean id="beanName" class="fully.qualified.ClassName" />.
+ id: unique name (used to refer this bean).
+ class: fully qualified name of the class (NO .java extension).  
+  In configuration xml file propert field name should match the setter variable created else error will thrown during runtime
+value field in property is where we can set value of that variable
+In bean property id is nickname of the file which we want to create bean so going forward we can use this nickname to create,set bean
+
+# Important XML Tags
+<property name="" value="" /> → for injecting simple values (String, int, etc.)
+<property name="" ref="" /> → for injecting bean references.
+<constructor-arg ref="" /> → for constructor injection.
+Fully qualified class names must be correctly specified in XML.
+
+  # 2️⃣ Property vs Ref
+    #   When using <property>:
+    ➔ For simple values (String, int, etc.):
+  <property name="fieldName" value="actual value" />
+  name: the field name (or setter method name without set) in the Java class.
+  value: actual literal value you want to set.
+
+  ➔ For object reference (another bean):
+   <property name="fieldName" ref="otherBeanId" />
+      name: the field name in class where dependency should be injected.
+      ref: the id of another bean defined in XML.
+
+  5️⃣ Important Rules
+  Situation	What to write
+  Inject simple value (String, int, etc.)	<property name="fieldName" value="literalValue" />
+  Inject object (bean reference)	<property name="fieldName" ref="beanId" />
+  Inject object via constructor	<constructor-arg ref="beanId" />
+
+
