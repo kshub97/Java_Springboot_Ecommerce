@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- bean definitions here -->
+    <bean id="userDataProvider" class="com.coupling.ioc.UserDatabaseProvider">
+   </bean>
+
+    <bean id="newDataProvider" class="com.coupling.ioc.NewDatabaseProvider">
+
+    </bean>
+    <bean id="webDataProvider" class="com.coupling.ioc.WebServiceDataProvider">
+
+    </bean>
+
+    <!-- ioc -->
+    <bean id="userManagerWithDataProvider" class="com.coupling.ioc.UserManager">
+        <constructor-arg ref="userDataProvider"/>
+    </bean>
+
+    <bean id="userManagerWithNewDataProvider" class="com.coupling.ioc.UserManager">
+        <constructor-arg ref="newDataProvider"/>
+    </bean>
+
+    <bean id="userManagerWithWebDataProvider" class="com.coupling.ioc.UserManager">
+        <constructor-arg ref="webDataProvider"/>
+    </bean>
+
+
+
+</beans>

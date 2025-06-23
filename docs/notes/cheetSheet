@@ -1,0 +1,80 @@
+## IOC means:
+You delegate control of object creation to a container (like Spring), instead of your classes creating them directly.
+
+#  Normally, in traditional code, your UserManager class would itself create an instance of UserDatabaseProvider like:
+
+        UserDataProvider provider = new UserDatabaseProvider();
+        UserManager manager = new UserManager(provider);
+
+    That means:
+        👉 Your code controls object creation / tightly coupled
+
+# But with Spring IOC:
+    You have moved the responsibility of creating and injecting objects to Spring Container.
+    Your UserManager just defines that it needs a UserDataProvider — Spring decides which implementation to inject (based on the XML config).
+
+#IOC Way (Loose Coupling):
+    ApplicationContext context = new ClassPathXmlApplicationContext("applicationContextIOC.xml");
+    UserManager manager = (UserManager) context.getBean("userManagerWithUserDataProvider");
+
+    Spring creates the object and wires dependencies based on config.
+Control is inverted — now the framework controls object creation and injection.
+
+
+ #IOC = Object creation control is inverted.
+    Instead of classes creating their own dependencies,
+    The container (Spring) creates and injects all dependencies.
+
+# In current project
+ | Component                                                               | IOC Role               |
+ | ----------------------------------------------------------------------- | ---------------------- |
+ | `UserDataProvider`                                                      | Interface (Dependency) |
+ | `UserDatabaseProvider`, `NewDatabaseProvider`, `WebServiceDataProvider` | Implementations        |
+ | `UserManager`                                                           | Dependent class        |
+ | Spring XML                                                              | Wiring all together    |
+ | `ApplicationContext`                                                    | The IOC Container      |
+
+
+#What is Dependency Injection (DI)?
+    DI is a design pattern used to implement IOC, Way to achieve IOC.
+    It means: injecting dependencies into a class during runtime, instead of creating them inside the class.
+
+#Types of DI in Spring:
+Type	                                                                                How it works
+Constructor Injection	        Dependencies injected via constructor parameters       <constructor-arg ref="beanId"/>
+Setter Injection	            Dependencies injected via setter methods	            <property name="fieldName" ref="beanId"/>
+
+
+              [XML Config]
+                  |
+                  V
+   +----------------------------------+
+   | <bean id="dataProvider"          |
+   |       class="UserDatabaseProvider" /> |
+   +----------------------------------+
+                  |
+                  |
+                  V
+   +----------------------------------+
+   | <bean id="userManager"           |
+   |       class="UserManager">       |
+   |   <constructor-arg ref="dataProvider"/>|
+   +----------------------------------+
+                  |
+                  V
+      Spring IOC Container (ApplicationContext)
+                  |
+      Creates And Injects dependencies (dataProvider) into UserManager (Dependent class     )
+                  |
+                  V
+        (Ready-to-use UserManager object) Your code uses the ready object
+
+Concept             	Meaning
+IOC	                    Shifting object control from your code to Spring
+DI	                    Mechanism used by IOC to inject dependencies
+Bean	                Object managed by Spring
+ApplicationContext	    Spring IOC container
+Loose Coupling	        Your classes are flexible and easy to maintain/test
+ref	                    Reference to another bean
+value	                Assigns literal values to properties
+
