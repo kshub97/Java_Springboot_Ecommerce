@@ -1,0 +1,165 @@
+# 🌱 Spring Dependency Injection Full Cheat Sheet
+
+---
+
+## 1️⃣ XML-Based Dependency Injection
+
+### Setter Injection (XML)
+- Inject using setter methods.
+```xml
+<bean id="specification" class="com.example.Specification">
+    <property name="make" value="Tata" />
+    <property name="model" value="Harrier" />
+</bean>
+
+<bean id="myCar" class="com.example.Car">
+    <property name="specification" ref="specification" />
+</bean>
+
+#Constructor Injection (XML)
+    Inject using constructor.
+      Constructor Injection (XML)
+       Inject using constructor.
+        <bean id="specification" class="com.example.Specification" />
+        <bean id="myCar" class="com.example.Car">
+            <constructor-arg ref="specification" />
+        </bean>
+
+ 2️⃣ Autowiring Modes (XML)
+ autowire="byName"
+ Match property name with bean id.
+ <bean id="specification" class="com.example.Specification" />
+ <bean id="myCar" class="com.example.Car" autowire="byName" />
+
+autowire="byType"
+Match property type with bean type.
+<bean id="specification" class="com.example.Specification" />
+<bean id="myCar" class="com.example.Car" autowire="byType" />
+autowire="constructor"
+Match constructor argument type with bean type.
+<bean id="specification" class="com.example.Specification" />
+<bean id="myCar" class="com.example.Car" autowire="constructor" />
+
+3️⃣ Annotation-Based Dependency Injection
+Using @Component & @ComponentScan
+    Java Class:
+    @Component
+    public class Employee {
+        @Value("Shubham")
+        private String firstName;
+
+        @Value("#{25000.0}")
+        private double salary;
+    }
+
+Enable Component Scanning::
+
+#XML Based Config:
+    <context:component-scan base-package="com.example" />
+
+#Java Based Config:
+    @Configuration
+    @ComponentScan("com.example")
+    public class AppConfig {}
+    Load Context (Java Config Example):
+    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    Employee emp = context.getBean(Employee.class);
+
+
+4️⃣ Annotation-Based Autowiring
+
+Field Autowiring:
+@Component
+public class Car {
+    @Autowired
+    private Specification specification;
+}
+Constructor Autowiring:
+@Component
+public class Car {
+    private Specification specification;
+
+    @Autowired
+    public Car(Specification specification) {
+        this.specification = specification;
+    }
+}
+
+5️⃣ Handle Multiple Beans with @Qualifier
+
+Multiple Beans Example:
+@Component("spec1")
+public class Specification { ... }
+
+@Component("spec2")
+public class Specification { ... }
+Use @Qualifier:
+@Component
+public class Car {
+    @Autowired
+    @Qualifier("spec1")
+    private Specification specification;
+}
+
+6️⃣ @Value Injection
+
+Inject String:
+@Value("Shubham")
+private String name;
+Inject Numeric using SpEL:
+@Value("#{25000.0}")
+private double salary;
+
+## 🔥 Complete Comparison Table
+
+| Mode              | Match Based On       | Setter Needed? | Constructor Used? | Bean ID Important? | Multiple Beans |
+| ----------------- | -------------------- | -------------- | ----------------- | ------------------ | -------------- |
+| byName            | Property name        | Yes            | No                | Yes                | Name decides   |
+| byType            | Property type        | Yes            | No                | No                 | Error          |
+| constructor       | Constructor arg type | No             | Yes               | No                 | Error          |
+| @Autowired (field)| Type                 | No             | No                | No                 | Error (unless @Qualifier used) |
+
+---
+
+## ⚡ Quick Interview One-Line Cheat Sheet
+
+| Topic                | Key Point |
+| --------------------- | --------- |
+| Setter Injection      | Inject via `<property>` tag |
+| Constructor Injection | Inject via `<constructor-arg>` tag |
+| autowire="byName"     | Property name == Bean id |
+| autowire="byType"     | Property type == Bean type |
+| autowire="constructor"| Constructor arg type == Bean type |
+| @Component            | Marks class for component scanning |
+| @Autowired            | Automatically inject dependency |
+| @Qualifier            | Helps resolve multiple beans of same type |
+| @Value                | Inject literal or SpEL expression |
+| Component Scan        | Enabled via `<context:component-scan>` (XML) or `@ComponentScan` (Java) |
+
+✅ In Annotation-based autowiring:
+| Scenario                  | Annotation                    | Internally Works Like         |
+| ------------------------- | ----------------------------- | ----------------------------- |
+| **Field Injection**       | `@Autowired` on field         | Like **byType**               |
+| **Setter Injection**      | `@Autowired` on setter method | Like **byType**               |
+| **Constructor Injection** | `@Autowired` on constructor   | Like **constructor autowire** |
+
+
+✅ In XML-based autowire:
+| Type            | Works Based On                    |
+| --------------- | --------------------------------- |
+| **byName**      | Property name == bean id          |
+| **byType**      | Property type == bean type        |
+| **constructor** | Constructor arg type == bean type |
+
+
+🔥 Summary Sentence:
+"Spring DI wires dependencies using XML or Annotation. Autowire byName matches property name to bean id; byType matches type; constructor uses constructor param types; annotations simplify everything with @Component, @Autowired, @Qualifier, and @Value."
+
+👉 In annotations, @Autowired works like byType for field/setter injection, and like constructor autowire for constructor injection.
+
+In short:
+XML autowire ➔ byName, byType, constructor
+Annotation autowire ➔ @Autowired (default byType behavior) + @Qualifier if multiple beans
+
+
+
